@@ -1,18 +1,22 @@
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { useState, useRef, useEffect } from 'react'
 import { useAuth } from '../../hooks/useAuth'
 
-function NavIcon({ children, label, to }) {
+function NavIcon({ children, label, to, isActiveOverride }) {
   return (
     <NavLink
       to={to}
-      className={({ isActive }) =>
+      className={({ isActive }) => {
+        const active = typeof isActiveOverride === 'boolean' ? isActiveOverride : isActive
+
+        return (
         `flex min-w-[84px] flex-col items-center gap-1 rounded-[1.1rem] px-3 py-2.5 text-[11px] font-medium tracking-[0.02em] transition-all duration-300 ${
-          isActive
+          active
             ? 'bg-[#18211d] text-white shadow-[0_14px_28px_rgba(24,33,29,0.16)]'
             : 'text-[#5e6a60] hover:bg-white/65 hover:text-[#18211d]'
         }`
-      }
+        )
+      }}
     >
       {children}
       <span className="touch-target-override">{label}</span>
@@ -20,11 +24,15 @@ function NavIcon({ children, label, to }) {
   )
 }
 
-export default function AppShell({ children, title }) {
-  const { user, signOut } = useAuth()
+export default function AppShell({ children, title, headerExtra = null }) {
+  const { signOut } = useAuth()
+  const location = useLocation()
   const navigate = useNavigate()
   const [showSignOutDialog, setShowSignOutDialog] = useState(false)
   const signOutBtnRef = useRef(null)
+  const isCasesTabActive =
+    location.pathname === '/cases' ||
+    (location.pathname.startsWith('/cases/') && !location.pathname.startsWith('/cases/new'))
 
   // Move focus into dialog when it opens
   useEffect(() => {
@@ -32,10 +40,6 @@ export default function AppShell({ children, title }) {
       signOutBtnRef.current?.focus()
     }
   }, [showSignOutDialog])
-
-  const initials = user?.email
-    ? user.email.slice(0, 2).toUpperCase()
-    : '?'
 
   async function handleSignOut() {
     await signOut()
@@ -53,18 +57,11 @@ export default function AppShell({ children, title }) {
 
       <div className="app-mobile-frame px-4 pb-[calc(112px+env(safe-area-inset-bottom))] pt-3">
         <header className="app-floating-nav sticky top-[calc(env(safe-area-inset-top)+12px)] z-20 mb-5 rounded-[1.8rem] px-4 py-3">
-          <div className="flex items-center justify-between gap-4">
-            <div className="min-w-0">
-              <h1 className="text-xl font-semibold tracking-[-0.04em] text-[#18211d]">{title}</h1>
+          <div className="flex min-w-0 items-center gap-3">
+            <div className={`min-w-0 ${headerExtra ? 'flex-1' : ''}`}>
+              <h1 className="truncate text-xl font-semibold tracking-[-0.04em] text-[#18211d]">{title}</h1>
             </div>
-
-            <button
-              onClick={() => setShowSignOutDialog(true)}
-              className="flex h-11 w-11 items-center justify-center rounded-[1.2rem] border border-[#18211d]/8 bg-white/80 text-sm font-semibold text-[#18211d] transition-all duration-300 hover:-translate-y-0.5"
-              aria-label="Account menu"
-            >
-              {initials}
-            </button>
+            {headerExtra}
           </div>
         </header>
 
@@ -77,7 +74,7 @@ export default function AppShell({ children, title }) {
         className="app-floating-nav fixed bottom-4 left-1/2 z-20 flex w-[calc(100%-1.5rem)] max-w-[398px] -translate-x-1/2 items-center justify-around rounded-[1.9rem] px-2 py-2"
         style={{ paddingBottom: 'calc(0.5rem + env(safe-area-inset-bottom))' }}
       >
-        <NavIcon to="/cases" label="Cases">
+        <NavIcon to="/cases" label="Cases" isActiveOverride={isCasesTabActive}>
           <svg className="h-5 w-5 touch-target-override" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
               d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />

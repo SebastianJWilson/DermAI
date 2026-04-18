@@ -50,9 +50,7 @@ export default function CaseCard({ caseData }) {
         </div>
 
         {caseData.status === 'complete' && caseData.top_product && (
-          <p className="mt-2 truncate text-xs text-[#5e6a60]">
-            Top pick: {caseData.top_product.name}
-          </p>
+          <p className="mt-2 truncate text-xs text-[#5e6a60]">{caseData.top_product.name}</p>
         )}
       </div>
 
