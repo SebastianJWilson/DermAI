@@ -28,8 +28,8 @@ function stepState(stepIndex, status) {
 function StepDot({ state }) {
   if (state === 'complete') {
     return (
-      <div className="w-7 h-7 rounded-full bg-teal-500 flex items-center justify-center flex-shrink-0">
-        <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-[#18211d]">
+        <svg className="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
         </svg>
       </div>
@@ -37,32 +37,37 @@ function StepDot({ state }) {
   }
   if (state === 'active') {
     return (
-      <div className="w-7 h-7 rounded-full bg-teal-100 border-2 border-teal-500 flex items-center justify-center flex-shrink-0 animate-pulse">
-        <div className="w-2.5 h-2.5 rounded-full bg-teal-500" />
+      <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full border border-[#7d9d7e] bg-[#e9f0e5]">
+        <div className="h-3 w-3 rounded-full bg-[#445747] animate-pulse" />
       </div>
     )
   }
   return (
-    <div className="w-7 h-7 rounded-full bg-slate-100 border-2 border-slate-200 flex-shrink-0" />
+    <div className="h-9 w-9 flex-shrink-0 rounded-full border border-[#18211d]/10 bg-white/75" />
   )
 }
 
 export default function PipelineProgress({ status }) {
   return (
-    <div className="bg-white rounded-xl border border-slate-200 p-4">
+    <div className="app-panel space-y-4">
+      <div className="space-y-1">
+        <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#728077]">Pipeline</p>
+        <p className="text-sm text-[#5e6a60]">The photo, concern, and review data move through three stages.</p>
+      </div>
+
       <div className="space-y-3">
         {STEPS.map((step, i) => {
           const state = stepState(i, status)
           return (
-            <div key={step.label} className="flex items-center gap-3">
+            <div key={step.label} className="flex items-center gap-3 rounded-[1.25rem] border border-[#18211d]/8 bg-white/65 px-3 py-3">
               <StepDot state={state} />
               <span
-                className={`text-sm font-medium ${
+                className={`text-sm font-medium tracking-[-0.01em] ${
                   state === 'active'
-                    ? 'text-teal-700'
+                    ? 'text-[#18211d]'
                     : state === 'complete'
-                    ? 'text-slate-700'
-                    : 'text-slate-400'
+                    ? 'text-[#425246]'
+                    : 'text-[#8a958d]'
                 }`}
               >
                 {step.label}

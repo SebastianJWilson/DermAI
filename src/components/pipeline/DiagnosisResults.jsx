@@ -7,20 +7,20 @@ export default function DiagnosisResults({ conditions = [], selectedCondition, c
   const sorted = [...conditions].sort((a, b) => (b.confidence ?? 0) - (a.confidence ?? 0))
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+    <div className="app-panel overflow-hidden p-0">
       <button
         type="button"
         onClick={() => setCollapsed(c => !c)}
-        className="w-full flex items-center justify-between px-4 py-3 hover:bg-slate-50 transition-colors"
+        className="flex w-full items-center justify-between px-5 py-4 text-left transition-colors hover:bg-white/50"
         aria-expanded={!collapsed}
       >
-        <h2 className="text-sm font-semibold text-slate-900">Possible Conditions</h2>
+        <h2 className="text-sm font-semibold uppercase tracking-[0.16em] text-[#324036]">Possible conditions</h2>
         <div className="flex items-center gap-2">
           {collapsed && (
-            <span className="text-xs text-slate-500">{sorted.length} conditions analyzed</span>
+            <span className="text-xs text-[#7f8b83]">{sorted.length} reviewed</span>
           )}
           <svg
-            className={`w-4 h-4 text-slate-400 transition-transform ${collapsed ? '' : 'rotate-180'}`}
+            className={`h-4 w-4 text-[#7f8b83] transition-transform ${collapsed ? '' : 'rotate-180'}`}
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -31,8 +31,8 @@ export default function DiagnosisResults({ conditions = [], selectedCondition, c
       </button>
 
       {!collapsed && (
-        <div className="px-4 pb-4 space-y-3">
-          <p className="text-xs text-slate-400 -mt-1">
+        <div className="space-y-3 px-5 pb-5">
+          <p className="text-xs leading-5 text-[#7f8b83]">
             These are AI-generated estimates, not medical diagnoses. Please consult a licensed dermatologist.
           </p>
           {sorted.map((cond, i) => (

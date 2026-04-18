@@ -1,28 +1,38 @@
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { useState, useRef, useEffect } from 'react'
 import { useAuth } from '../../hooks/useAuth'
 
-function NavIcon({ children, label, to }) {
+function NavIcon({ children, label, to, isActiveOverride }) {
   return (
     <NavLink
       to={to}
-      className={({ isActive }) =>
-        `flex flex-col items-center gap-0.5 min-w-[56px] py-2 px-3 rounded-lg transition-colors ${
-          isActive ? 'text-teal-600' : 'text-slate-500 hover:text-slate-700'
+      className={({ isActive }) => {
+        const active = typeof isActiveOverride === 'boolean' ? isActiveOverride : isActive
+
+        return (
+        `flex min-w-[84px] flex-col items-center gap-1 rounded-[1.1rem] px-3 py-2.5 text-[11px] font-medium tracking-[0.02em] transition-all duration-300 ${
+          active
+            ? 'bg-[#18211d] text-white shadow-[0_14px_28px_rgba(24,33,29,0.16)]'
+            : 'text-[#5e6a60] hover:bg-white/65 hover:text-[#18211d]'
         }`
-      }
+        )
+      }}
     >
       {children}
-      <span className="text-[10px] font-medium">{label}</span>
+      <span className="touch-target-override">{label}</span>
     </NavLink>
   )
 }
 
-export default function AppShell({ children, title }) {
-  const { user, signOut } = useAuth()
+export default function AppShell({ children, title, headerExtra = null }) {
+  const { signOut } = useAuth()
+  const location = useLocation()
   const navigate = useNavigate()
   const [showSignOutDialog, setShowSignOutDialog] = useState(false)
   const signOutBtnRef = useRef(null)
+  const isCasesTabActive =
+    location.pathname === '/cases' ||
+    (location.pathname.startsWith('/cases/') && !location.pathname.startsWith('/cases/new'))
 
   // Move focus into dialog when it opens
   useEffect(() => {
@@ -31,94 +41,94 @@ export default function AppShell({ children, title }) {
     }
   }, [showSignOutDialog])
 
-  const initials = user?.email
-    ? user.email.slice(0, 2).toUpperCase()
-    : '?'
-
   async function handleSignOut() {
     await signOut()
     navigate('/login', { replace: true })
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50 max-w-[430px] mx-auto">
-      {/* Skip to main content (accessibility) */}
+    <div className="app-screen">
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:bg-white focus:px-4 focus:py-2 focus:rounded focus:text-teal-700 focus:font-medium focus:shadow"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-50 focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-[#18211d] focus:shadow-lg"
       >
         Skip to main content
       </a>
-      {/* Top header */}
-      <header className="flex items-center justify-between px-4 py-3 bg-white border-b border-slate-200 sticky top-0 z-10">
-        <h1 className="text-lg font-bold text-slate-900">{title}</h1>
-        <button
-          onClick={() => setShowSignOutDialog(true)}
-          className="w-9 h-9 rounded-full bg-teal-100 text-teal-700 font-semibold text-sm flex items-center justify-center"
-          aria-label="Account menu"
-        >
-          {initials}
-        </button>
-      </header>
 
-      {/* Main content */}
-      <main id="main-content" className="flex-1 pb-[calc(64px+env(safe-area-inset-bottom))]">
-        {children}
-      </main>
+      <div className="app-mobile-frame px-4 pb-[calc(112px+env(safe-area-inset-bottom))] pt-3">
+        <header className="app-floating-nav sticky top-[calc(env(safe-area-inset-top)+12px)] z-20 mb-5 rounded-[1.8rem] px-4 py-3">
+          <div className="flex min-w-0 items-center gap-3">
+            <div className={`min-w-0 ${headerExtra ? 'flex-1' : ''}`}>
+              <h1 className="truncate text-xl font-semibold tracking-[-0.04em] text-[#18211d]">{title}</h1>
+            </div>
+            {headerExtra}
+          </div>
+        </header>
 
-      {/* Bottom nav */}
+        <main id="main-content" className="app-fade-up">
+          {children}
+        </main>
+      </div>
+
       <nav
-        className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white border-t border-slate-200 flex items-center justify-around px-2 z-10"
-        style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+        className="app-floating-nav fixed bottom-4 left-1/2 z-20 flex w-[calc(100%-1.5rem)] max-w-[398px] -translate-x-1/2 items-center justify-around rounded-[1.9rem] px-2 py-2"
+        style={{ paddingBottom: 'calc(0.5rem + env(safe-area-inset-bottom))' }}
       >
-        <NavIcon to="/cases" label="Cases">
-          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <NavIcon to="/cases" label="Cases" isActiveOverride={isCasesTabActive}>
+          <svg className="h-5 w-5 touch-target-override" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
               d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
           </svg>
         </NavIcon>
-        <NavIcon to="/cases/new" label="New Case">
-          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <NavIcon to="/cases/new" label="New">
+          <svg className="h-5 w-5 touch-target-override" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
               d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </NavIcon>
         <button
           onClick={() => setShowSignOutDialog(true)}
-          className="flex flex-col items-center gap-0.5 min-w-[56px] py-2 px-3 rounded-lg text-slate-500 hover:text-slate-700 transition-colors"
+          className="flex min-w-[84px] flex-col items-center gap-1 rounded-[1.1rem] px-3 py-2.5 text-[11px] font-medium tracking-[0.02em] text-[#5e6a60] transition-all duration-300 hover:bg-white/65 hover:text-[#18211d]"
           aria-label="Profile"
         >
-          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="h-5 w-5 touch-target-override" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
               d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
           </svg>
-          <span className="text-[10px] font-medium">Profile</span>
+          <span className="touch-target-override">Profile</span>
         </button>
       </nav>
 
-      {/* Sign out dialog */}
       {showSignOutDialog && (
-        <div className="fixed inset-0 bg-black/40 flex items-end z-50" onClick={() => setShowSignOutDialog(false)}>
+        <div className="fixed inset-0 z-50 flex items-end bg-[#18211d]/28 px-4" onClick={() => setShowSignOutDialog(false)}>
           <div
-            className="w-full max-w-[430px] mx-auto bg-white rounded-t-2xl p-6 space-y-3"
+            className="app-panel mb-4 w-full max-w-[430px] space-y-4 rounded-[2rem] px-5 py-5"
             onClick={e => e.stopPropagation()}
-            style={{ paddingBottom: 'calc(1.5rem + env(safe-area-inset-bottom))' }}
+            style={{ paddingBottom: 'calc(1.25rem + env(safe-area-inset-bottom))' }}
           >
-            <h2 className="text-lg font-semibold text-slate-900">Sign out?</h2>
-            <p className="text-sm text-slate-500">You&apos;ll need to sign in again to access your cases.</p>
-            <button
-              ref={signOutBtnRef}
-              onClick={handleSignOut}
-              className="w-full h-12 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl transition-colors"
-            >
-              Sign Out
-            </button>
-            <button
-              onClick={() => setShowSignOutDialog(false)}
-              className="w-full h-12 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl transition-colors"
-            >
-              Cancel
-            </button>
+            <div className="space-y-2">
+              <span className="app-kicker">Session</span>
+              <h2 className="text-[1.45rem] font-semibold tracking-[-0.04em] text-[#18211d]">Sign out</h2>
+              <p className="max-w-[28ch] text-sm leading-6 text-[#5e6a60]">
+                You can sign back in anytime to review past analyses and recommendations.
+              </p>
+            </div>
+
+            <div className="grid gap-3">
+              <button
+                ref={signOutBtnRef}
+                onClick={handleSignOut}
+                className="app-button-primary w-full"
+              >
+                Sign out
+              </button>
+              <button
+                onClick={() => setShowSignOutDialog(false)}
+                className="app-button-secondary w-full"
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         </div>
       )}
