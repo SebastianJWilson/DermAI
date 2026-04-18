@@ -9,16 +9,18 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 px-4 py-8">
-      <div className="w-full max-w-[430px] mx-auto">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-slate-900">Welcome — Let&apos;s get started</h1>
-          <p className="mt-2 text-sm text-slate-500">
-            This helps our AI give you more accurate results.
+    <div className="app-screen px-4 py-6">
+      <div className="app-mobile-frame space-y-8">
+        <section className="space-y-3">
+          <h1 className="max-w-[12ch] text-[2.5rem] font-semibold leading-[0.95] tracking-[-0.07em] text-[#18211d]">
+            Profile
+          </h1>
+          <p className="max-w-[30ch] text-sm leading-6 text-[#5e6a60]">
+            Used only to tune matches. You can keep answers short for a demo.
           </p>
-        </div>
+        </section>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+        <div className="app-panel">
           <DemographicsForm onSuccess={handleSuccess} />
         </div>
       </div>

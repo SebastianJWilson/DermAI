@@ -26,36 +26,40 @@ export default function CaseCard({ caseData }) {
   return (
     <Link
       to={`/cases/${caseData.id}`}
-      className="flex items-center gap-3 bg-white rounded-xl border border-slate-200 p-3 hover:border-teal-300 active:bg-slate-50 transition-colors min-h-[72px]"
+      className="app-card flex min-h-[92px] items-center gap-4 hover:-translate-y-0.5 hover:border-[#18211d]/12"
     >
-      {/* Thumbnail */}
-      <div className="flex-shrink-0 w-[60px] h-[60px] rounded-lg overflow-hidden bg-slate-100 flex items-center justify-center">
+      <div className="flex h-[68px] w-[68px] flex-shrink-0 items-center justify-center overflow-hidden rounded-[1.2rem] bg-[#eef2ea]">
         {imageUrl ? (
           <img src={imageUrl} alt="" className="w-full h-full object-cover" />
         ) : (
-          <svg className="w-7 h-7 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="h-7 w-7 text-[#839183]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
               d="M4.5 12.75l7.5-7.5 7.5 7.5M4.5 19.5l7.5-7.5 7.5 7.5" />
           </svg>
         )}
       </div>
 
-      {/* Content */}
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-semibold text-slate-900 truncate">{caseData.title}</p>
-        <div className="flex items-center gap-2 mt-1">
+        <div className="flex items-center justify-between gap-3">
+          <p className="truncate text-sm font-semibold text-[#18211d]">{caseData.title}</p>
+          <span className="touch-target-override text-xs text-[#7f8b83]">{relativeTime(caseData.created_at)}</span>
+        </div>
+
+        <div className="mt-2 flex items-center gap-2">
           <CaseStatusBadge status={caseData.status} />
         </div>
+
         {caseData.status === 'complete' && caseData.top_product && (
-          <p className="text-xs text-slate-400 mt-1 truncate">
+          <p className="mt-2 truncate text-xs text-[#5e6a60]">
             Top pick: {caseData.top_product.name}
           </p>
         )}
       </div>
 
-      {/* Timestamp */}
-      <div className="flex-shrink-0 text-xs text-slate-400 self-end pb-0.5">
-        {relativeTime(caseData.created_at)}
+      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#f4f1ea] text-[#5e6a60]">
+        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+        </svg>
       </div>
     </Link>
   )

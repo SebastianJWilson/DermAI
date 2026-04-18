@@ -29,7 +29,7 @@ function CaseImage({ imagePath, small = false }) {
     <img
       src={url}
       alt="Case photo"
-      className={`w-full rounded-xl object-cover ${small ? 'max-h-[120px]' : 'max-h-[300px]'}`}
+      className={`w-full rounded-[1.5rem] object-cover ${small ? 'max-h-[160px]' : 'max-h-[320px]'}`}
     />
   )
 }
@@ -132,31 +132,32 @@ export default function CaseDetailPage() {
   const isError = status === 'error'
 
   return (
-    <AppShell title="Case Detail">
-      <div className="p-4 space-y-5">
-        {/* Reconnecting banner */}
+    <AppShell title="Recommendation">
+      <div className="space-y-5">
         {realtimeStatus === 'reconnecting' && (
-          <div className="bg-yellow-50 border border-yellow-200 text-yellow-700 rounded-lg px-4 py-2 text-xs text-center">
-            Reconnecting to live updates…
+          <div className="rounded-[1.2rem] border border-yellow-200 bg-yellow-50 px-4 py-2 text-center text-xs text-yellow-700">
+            Reconnecting to live updates...
           </div>
         )}
 
-        {/* Image */}
-        <CaseImage imagePath={image_path} small={!isEarlyStage} />
+        <section className="app-panel space-y-4">
+          <div className="space-y-2">
+            <span className="app-kicker">Concern</span>
+            <h1 className="max-w-[12ch] text-[2rem] font-semibold leading-[0.96] tracking-[-0.06em] text-[#18211d]">
+              {isComplete ? 'Recommendation ready.' : 'Your scan is in progress.'}
+            </h1>
+            <p className="text-sm leading-6 text-[#5e6a60]">&quot;{title}&quot;</p>
+          </div>
 
-        {/* Title */}
-        <p className="text-sm text-slate-500 italic">"{title}"</p>
+          <CaseImage imagePath={image_path} small={!isEarlyStage} />
+        </section>
 
-        {/* Pipeline Progress */}
-        {!isError && (
-          <PipelineProgress status={status} />
-        )}
+        {!isError && <PipelineProgress status={status} />}
 
-        {/* Stage-specific content */}
         {isEarlyStage && (
-          <div className="text-center py-4 space-y-3">
+          <div className="app-panel-muted space-y-3 py-6 text-center">
             <LoadingSpinner size="lg" className="mx-auto" />
-            <p className="text-sm text-slate-500">This usually takes 15–30 seconds…</p>
+            <p className="text-sm text-[#5e6a60]">This usually takes 15 to 30 seconds.</p>
           </div>
         )}
 
@@ -168,14 +169,14 @@ export default function CaseDetailPage() {
               collapsed={false}
             />
             {isMidStage && (
-              <p className="text-sm text-slate-500 text-center">
-                Searching for products that treat <strong>{selected_condition}</strong>…
-              </p>
+              <div className="app-panel-muted text-center text-sm text-[#5e6a60]">
+                Searching for products that treat <strong>{selected_condition}</strong>.
+              </div>
             )}
             {isRankingStage && (
-              <p className="text-sm text-slate-500 text-center">
-                Reading and analyzing product reviews…
-              </p>
+              <div className="app-panel-muted text-center text-sm text-[#5e6a60]">
+                Reading and ranking review data for the strongest match.
+              </div>
             )}
           </>
         )}
@@ -192,29 +193,29 @@ export default function CaseDetailPage() {
               topProduct={top_product}
               condition={selected_condition}
             />
-            <p className="text-xs text-slate-400 text-center pb-4">
+            <p className="pb-4 text-center text-xs text-[#7f8b83]">
               AI-generated from publicly available review data. Not a medical endorsement.
             </p>
           </>
         )}
 
         {isError && (
-          <div className="space-y-4">
-            <div className="flex flex-col items-center text-center space-y-2 py-6">
-              <div className="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center">
-                <svg className="w-7 h-7 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="app-panel space-y-4">
+            <div className="flex flex-col items-center space-y-2 py-6 text-center">
+              <div className="flex h-14 w-14 items-center justify-center rounded-[1.2rem] bg-red-100">
+                <svg className="h-7 w-7 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                     d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
               </div>
-              <h2 className="text-lg font-semibold text-slate-900">Something went wrong</h2>
+              <h2 className="text-lg font-semibold text-[#18211d]">Processing stopped</h2>
               {error_message && (
-                <p className="text-sm text-slate-500">{error_message}</p>
+                <p className="text-sm text-[#5e6a60]">{error_message}</p>
               )}
             </div>
             <button
               onClick={handleRetry}
-              className="w-full h-12 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl transition-colors"
+              className="app-button-primary w-full"
             >
               Retry
             </button>

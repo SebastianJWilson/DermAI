@@ -40,13 +40,13 @@ export default function LoginForm({ onSuccess }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-4" noValidate>
       {serverError && (
-        <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 text-sm">
+        <div className="rounded-[1.2rem] border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
           {serverError}
         </div>
       )}
 
-      <div>
-        <label htmlFor="login-email" className="block text-sm font-medium text-slate-700 mb-1">
+      <div className="space-y-2">
+        <label htmlFor="login-email" className="block text-sm font-medium text-[#324036]">
           Email
         </label>
         <input
@@ -55,16 +55,14 @@ export default function LoginForm({ onSuccess }) {
           autoComplete="email"
           value={email}
           onChange={e => setEmail(e.target.value)}
-          className={`w-full h-11 px-3 rounded-lg border bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-500 ${
-            errors.email ? 'border-red-400' : 'border-slate-300'
-          }`}
+          className={`app-input ${errors.email ? 'border-red-400 focus:border-red-400' : ''}`}
           placeholder="you@example.com"
         />
-        {errors.email && <p className="mt-1 text-xs text-red-600">{errors.email}</p>}
+        {errors.email && <p className="text-xs text-red-600">{errors.email}</p>}
       </div>
 
-      <div>
-        <label htmlFor="login-password" className="block text-sm font-medium text-slate-700 mb-1">
+      <div className="space-y-2">
+        <label htmlFor="login-password" className="block text-sm font-medium text-[#324036]">
           Password
         </label>
         <input
@@ -73,20 +71,23 @@ export default function LoginForm({ onSuccess }) {
           autoComplete="current-password"
           value={password}
           onChange={e => setPassword(e.target.value)}
-          className={`w-full h-11 px-3 rounded-lg border bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-500 ${
-            errors.password ? 'border-red-400' : 'border-slate-300'
-          }`}
+          className={`app-input ${errors.password ? 'border-red-400 focus:border-red-400' : ''}`}
           placeholder="••••••••"
         />
-        {errors.password && <p className="mt-1 text-xs text-red-600">{errors.password}</p>}
+        {errors.password && <p className="text-xs text-red-600">{errors.password}</p>}
       </div>
 
       <button
         type="submit"
         disabled={loading}
-        className="w-full h-12 bg-teal-600 hover:bg-teal-700 disabled:bg-teal-300 text-white font-semibold rounded-lg transition-colors"
+        className="app-button-primary w-full"
       >
-        {loading ? 'Signing in…' : 'Sign In'}
+        <span>{loading ? 'Signing in...' : 'Sign in'}</span>
+        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/12 text-white">
+          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14m-5-5 5 5-5 5" />
+          </svg>
+        </span>
       </button>
     </form>
   )
