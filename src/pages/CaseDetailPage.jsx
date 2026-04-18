@@ -91,7 +91,7 @@ export default function CaseDetailPage() {
   }, [id])
 
   // Run pipeline hook
-  useCasePipeline(caseData, user?.id)
+  useCasePipeline(caseData, user?.id, setCaseData)
 
   async function handleRetry() {
     if (!caseData) return
