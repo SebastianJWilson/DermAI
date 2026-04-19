@@ -144,7 +144,11 @@ export default function CaseDetailPage() {
           <div className="space-y-2">
             <span className="app-kicker">Concern</span>
             <h1 className="max-w-[12ch] text-[2rem] font-semibold leading-[0.96] tracking-[-0.06em] text-[#18211d]">
-              {isComplete ? 'Recommendation ready.' : 'Your scan is in progress.'}
+              {isComplete && ranked_products?.length > 0
+                ? 'Recommendation ready.'
+                : isComplete
+                  ? 'Scan complete.'
+                  : 'Your scan is in progress.'}
             </h1>
             <p className="text-sm leading-6 text-[#5e6a60]">&quot;{title}&quot;</p>
           </div>
@@ -188,14 +192,25 @@ export default function CaseDetailPage() {
               selectedCondition={selected_condition}
               collapsed={true}
             />
-            <ProductResults
-              rankedProducts={ranked_products}
-              topProduct={top_product}
-              condition={selected_condition}
-            />
-            <p className="pb-4 text-center text-xs text-[#7f8b83]">
-              AI-generated from publicly available review data. Not a medical endorsement.
-            </p>
+            {ranked_products && ranked_products.length > 0 ? (
+              <>
+                <ProductResults
+                  rankedProducts={ranked_products}
+                  topProduct={top_product}
+                  condition={selected_condition}
+                />
+                <p className="pb-4 text-center text-xs text-[#7f8b83]">
+                  AI-generated from publicly available review data. Not a medical endorsement.
+                </p>
+              </>
+            ) : (
+              <div className="app-panel space-y-2 py-6 text-center">
+                <p className="text-base font-medium text-[#18211d]">No skin condition detected</p>
+                <p className="text-sm text-[#5e6a60]">
+                  The image did not show a recognizable skin condition. Try uploading a clearer photo or describing your concern in more detail.
+                </p>
+              </div>
+            )}
           </>
         )}
 

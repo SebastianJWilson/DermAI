@@ -125,6 +125,20 @@ async function runPipeline(caseData, userId, onCaseUpdate) {
       const selected_condition = conditions[0]?.name ?? null
       console.log('[Pipeline] Parsed conditions:', conditions, '→ selected:', selected_condition)
 
+      // If no real condition was detected, stop here — no product search needed
+      if (noConditionDetected(selected_condition)) {
+        console.log('[Pipeline] Step 1 — no skin condition detected, skipping product search')
+        await updateCase(caseId, {
+          status: 'complete',
+          conditions,
+          selected_condition,
+          ranked_products: [],
+          top_product: null,
+        }, onCaseUpdate)
+        console.log('[Pipeline] Pipeline complete (no condition detected)')
+        return
+      }
+
       await updateCase(caseId, {
         status: 'diagnosis_complete',
         conditions,
@@ -252,6 +266,30 @@ async function setError(caseId, message, onCaseUpdate) {
     .update({ status: 'error', error_message: message })
     .eq('id', caseId)
   onCaseUpdate?.(prev => ({ ...prev, status: 'error', error_message: message }))
+}
+
+/**
+ * Returns true if the condition name suggests no real skin condition was detected.
+ */
+function noConditionDetected(conditionName) {
+  if (!conditionName) return true
+  const lower = conditionName.toLowerCase()
+  const noConditionPhrases = [
+    'no condition',
+    'no skin condition',
+    'no visible',
+    'no abnormality',
+    'no dermatological',
+    'normal skin',
+    'healthy skin',
+    'clear skin',
+    'none detected',
+    'not detected',
+    'no issue',
+    'no concern',
+    'no problem',
+  ]
+  return noConditionPhrases.some(phrase => lower.includes(phrase))
 }
 
 function blobToBase64(blob) {
