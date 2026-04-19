@@ -18,7 +18,7 @@ function SkeletonCard() {
 }
 
 export default function CasesListPage() {
-  const { user } = useAuth()
+  const { user, profile } = useAuth()
   const [cases, setCases] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -50,6 +50,10 @@ export default function CasesListPage() {
   }
 
   const completedCount = cases.filter(c => c.status === 'complete').length
+
+  const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+  const weeklyCount = cases.filter(c => new Date(c.created_at) > sevenDaysAgo).length
+  const isLimited = profile?.subscription_tier !== 'premium' && weeklyCount >= 1
 
   const casesHeaderExtra = (
     <div className="flex shrink-0 items-center gap-2">
@@ -100,21 +104,21 @@ export default function CasesListPage() {
 
         {loading ? (
           <div className="space-y-3">
-            <NewCaseListRow />
+            <NewCaseListRow weeklyCount={weeklyCount} isLimited={isLimited} isPremium={profile?.subscription_tier === 'premium'} />
             <SkeletonCard />
             <SkeletonCard />
             <SkeletonCard />
           </div>
         ) : cases.length === 0 ? (
           <div className="space-y-3">
-            <NewCaseListRow />
+            <NewCaseListRow weeklyCount={weeklyCount} isLimited={isLimited} isPremium={profile?.subscription_tier === 'premium'} />
             <div className="app-panel py-10 text-center">
               <p className="text-sm text-[#5e6a60]">No cases yet</p>
             </div>
           </div>
         ) : (
           <div className="space-y-3">
-            <NewCaseListRow />
+            <NewCaseListRow weeklyCount={weeklyCount} isLimited={isLimited} isPremium={profile?.subscription_tier === 'premium'} />
             {cases.map(c => (
               <CaseCard key={c.id} caseData={c} />
             ))}

@@ -12,6 +12,7 @@ import CasesListPage from './pages/CasesListPage'
 import NewCasePage from './pages/NewCasePage'
 import CaseDetailPage from './pages/CaseDetailPage'
 import ProfilePage from './pages/ProfilePage'
+import SubscriptionPage from './pages/SubscriptionPage'
 import LoadingSpinner from './components/ui/LoadingSpinner'
 import OfflineBanner from './components/ui/OfflineBanner'
 
@@ -134,6 +135,15 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <ProfilePage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/subscription"
+        element={
+          <ProtectedRoute>
+            <SubscriptionPage />
           </ProtectedRoute>
         }
       />

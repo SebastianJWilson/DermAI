@@ -4,7 +4,9 @@
       "Bash(npm install:*)",
       "Bash(npx tailwindcss:*)",
       "Bash(npm run:*)",
-      "WebFetch(domain:featherless.ai)"
+      "WebFetch(domain:featherless.ai)",
+      "mcp__claude_ai_Supabase__list_projects",
+      "mcp__claude_ai_Supabase__apply_migration"
     ]
   }
 }

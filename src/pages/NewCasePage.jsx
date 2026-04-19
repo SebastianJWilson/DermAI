@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
 import { supabase } from '../lib/supabaseClient'
@@ -8,8 +8,29 @@ import CaseDescriptionInput from '../components/cases/CaseDescriptionInput'
 import AppShell from '../components/layout/AppShell'
 
 export default function NewCasePage() {
-  const { user } = useAuth()
+  const { user, profile } = useAuth()
   const navigate = useNavigate()
+
+  // Redirect to subscription page if weekly limit reached
+  useEffect(() => {
+    if (!user || !profile) return
+    if (profile.subscription_tier === 'premium') return
+
+    async function checkLimit() {
+      const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
+      const { count } = await supabase
+        .from('cases')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+        .gte('created_at', sevenDaysAgo)
+
+      if (count >= 1) {
+        navigate('/subscription', { replace: true })
+      }
+    }
+
+    checkLimit()
+  }, [user, profile, navigate])
 
   const [imageData, setImageData] = useState(null) // { file, previewUrl }
   const [imageError, setImageError] = useState('')

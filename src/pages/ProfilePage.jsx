@@ -313,6 +313,36 @@ export default function ProfilePage() {
           </form>
         )}
 
+        {/* Subscription */}
+        {!editing && (
+          <div className="app-panel px-5 py-4">
+            <div className="mb-2 flex items-center justify-between">
+              <h2 className="text-[0.78rem] font-semibold uppercase tracking-[0.14em] text-[#55635a]">Plan</h2>
+            </div>
+            <button
+              type="button"
+              onClick={() => navigate('/subscription')}
+              className="flex w-full items-center justify-between py-3 text-sm font-medium text-[#18211d] transition-colors hover:text-[#18211d]/70"
+            >
+              <div className="flex items-center gap-2.5">
+                <span>{profile?.subscription_tier === 'premium' ? 'Premium' : 'Free'}</span>
+                {profile?.subscription_tier === 'premium' ? (
+                  <span className="rounded-full bg-[#18211d] px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-white">
+                    Active
+                  </span>
+                ) : (
+                  <span className="rounded-full border border-[#18211d]/15 bg-[#f4f1ea] px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[#5e6a60]">
+                    1 / week
+                  </span>
+                )}
+              </div>
+              <svg className="h-4 w-4 text-[#7f8b83]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+        )}
+
         {/* Sign-out */}
         {!editing && (
           <div className="app-panel px-5 py-4">
