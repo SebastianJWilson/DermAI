@@ -33,6 +33,10 @@ function extractJson(text) {
   return stripped
 }
 
+export const config = {
+  maxDuration: 60, // seconds — vision LLM call can take 30-50s
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' })

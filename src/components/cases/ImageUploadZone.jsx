@@ -40,7 +40,6 @@ export default function ImageUploadZone({ imagePreview, onImageSelected, error }
         ref={inputRef}
         type="file"
         accept="image/jpeg,image/png,image/webp"
-        capture="environment"
         onChange={handleFileChange}
         className="hidden"
         aria-label="Upload photo"
@@ -92,10 +91,10 @@ export default function ImageUploadZone({ imagePreview, onImageSelected, error }
 
           <div className="space-y-2">
             <p className="text-lg font-semibold tracking-[-0.03em] text-[#18211d]">
-              Tap to upload or capture
+              Tap to upload or take photo
             </p>
             <p className="max-w-[28ch] text-sm leading-6 text-[#5e6a60]">
-              Keep the concern centered. Avoid filters, makeup, or harsh shadows when possible.
+              Choose from your gallery, files, or take a new photo.
             </p>
           </div>
 
