@@ -48,6 +48,25 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'rawProductsAndReviews and condition are required' })
   }
 
+  // Trim payload before sending to LLM — only send fields needed for ranking
+  // This keeps the prompt small and fast regardless of how many reviews were fetched
+  const trimmed = {
+    condition,
+    products: (rawProductsAndReviews.products ?? []).map(p => ({
+      id:          p.id,
+      name:        p.name,
+      brand:       p.brand,
+      description: p.description,
+      url:         p.url,
+      reviews: {
+        raw_summary:    (p.reviews?.raw_summary ?? '').slice(0, 300),
+        average_rating: p.reviews?.average_rating,
+        review_count:   p.reviews?.review_count,
+        recommend_rate: p.reviews?.recommend_rate,
+      },
+    })),
+  }
+
   const userPrompt = `/no_think\nBelow is a JSON object containing skincare products and their collected review data for the condition: "${condition}".
 
 ${JSON.stringify(rawProductsAndReviews)}
