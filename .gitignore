@@ -24,3 +24,16 @@ dist-ssr
 *.sw?
 .env
 .vercel
+.env*.local
+
+# Python virtual environment
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Dataset CSV files (ingestion complete — data lives in Supabase)
+*.csv
+
+# Supabase temp files
+supabase/.temp/
