@@ -11,6 +11,7 @@ import OnboardingPage from './pages/OnboardingPage'
 import CasesListPage from './pages/CasesListPage'
 import NewCasePage from './pages/NewCasePage'
 import CaseDetailPage from './pages/CaseDetailPage'
+import ProfilePage from './pages/ProfilePage'
 import LoadingSpinner from './components/ui/LoadingSpinner'
 import OfflineBanner from './components/ui/OfflineBanner'
 
@@ -121,6 +122,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <CaseDetailPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <ProfilePage />
           </ProtectedRoute>
         }
       />

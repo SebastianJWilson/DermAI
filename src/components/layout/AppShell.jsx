@@ -1,6 +1,4 @@
-import { NavLink, useLocation, useNavigate } from 'react-router-dom'
-import { useState, useRef, useEffect } from 'react'
-import { useAuth } from '../../hooks/useAuth'
+import { NavLink, useLocation } from 'react-router-dom'
 
 function NavIcon({ children, label, to, isActiveOverride }) {
   return (
@@ -25,26 +23,10 @@ function NavIcon({ children, label, to, isActiveOverride }) {
 }
 
 export default function AppShell({ children, title, headerExtra = null }) {
-  const { signOut } = useAuth()
   const location = useLocation()
-  const navigate = useNavigate()
-  const [showSignOutDialog, setShowSignOutDialog] = useState(false)
-  const signOutBtnRef = useRef(null)
   const isCasesTabActive =
     location.pathname === '/cases' ||
     (location.pathname.startsWith('/cases/') && !location.pathname.startsWith('/cases/new'))
-
-  // Move focus into dialog when it opens
-  useEffect(() => {
-    if (showSignOutDialog) {
-      signOutBtnRef.current?.focus()
-    }
-  }, [showSignOutDialog])
-
-  async function handleSignOut() {
-    await signOut()
-    navigate('/login', { replace: true })
-  }
 
   return (
     <div className="app-screen">
@@ -86,52 +68,14 @@ export default function AppShell({ children, title, headerExtra = null }) {
               d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </NavIcon>
-        <button
-          onClick={() => setShowSignOutDialog(true)}
-          className="flex min-w-[84px] flex-col items-center gap-1 rounded-[1.1rem] px-3 py-2.5 text-[11px] font-medium tracking-[0.02em] text-[#5e6a60] transition-all duration-300 hover:bg-white/65 hover:text-[#18211d]"
-          aria-label="Profile"
-        >
+        <NavIcon to="/profile" label="Profile">
           <svg className="h-5 w-5 touch-target-override" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
               d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
           </svg>
-          <span className="touch-target-override">Profile</span>
-        </button>
+        </NavIcon>
       </nav>
 
-      {showSignOutDialog && (
-        <div className="fixed inset-0 z-50 flex items-end bg-[#18211d]/28 px-4" onClick={() => setShowSignOutDialog(false)}>
-          <div
-            className="app-panel mb-4 w-full max-w-[430px] space-y-4 rounded-[2rem] px-5 py-5"
-            onClick={e => e.stopPropagation()}
-            style={{ paddingBottom: 'calc(1.25rem + env(safe-area-inset-bottom))' }}
-          >
-            <div className="space-y-2">
-              <span className="app-kicker">Session</span>
-              <h2 className="text-[1.45rem] font-semibold tracking-[-0.04em] text-[#18211d]">Sign out</h2>
-              <p className="max-w-[28ch] text-sm leading-6 text-[#5e6a60]">
-                You can sign back in anytime to review past analyses and recommendations.
-              </p>
-            </div>
-
-            <div className="grid gap-3">
-              <button
-                ref={signOutBtnRef}
-                onClick={handleSignOut}
-                className="app-button-primary w-full"
-              >
-                Sign out
-              </button>
-              <button
-                onClick={() => setShowSignOutDialog(false)}
-                className="app-button-secondary w-full"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
