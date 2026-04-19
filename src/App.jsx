@@ -40,9 +40,9 @@ function PublicRoute({ children }) {
 
 // Root redirect
 function RootRedirect() {
-  const { user, profile, loading } = useAuth()
+  const { user, profile, loading, profileLoading } = useAuth()
 
-  if (loading) {
+  if (loading || profileLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <LoadingSpinner />
