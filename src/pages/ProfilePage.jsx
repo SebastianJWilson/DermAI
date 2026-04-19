@@ -142,8 +142,10 @@ export default function ProfilePage() {
 
         {/* Demographics — view mode */}
         {!editing && (
-          <div className="app-panel px-5 py-1">
-            <span className="app-kicker block pt-3 pb-1">Demographics</span>
+          <div className="app-panel px-5 py-4">
+            <div className="mb-2 flex items-center justify-between">
+              <h2 className="text-[0.78rem] font-semibold uppercase tracking-[0.14em] text-[#55635a]">Demographics</h2>
+            </div>
             <InfoRow label="Age" value={profile?.age ? `${profile.age} yrs` : null} />
             <InfoRow label="Weight" value={displayWeight} />
             <InfoRow label="Skin type" value={profile?.skin_type} />
@@ -313,8 +315,10 @@ export default function ProfilePage() {
 
         {/* Sign-out */}
         {!editing && (
-          <div className="app-panel px-5 py-1">
-            <span className="app-kicker block pt-3 pb-1">Session</span>
+          <div className="app-panel px-5 py-4">
+            <div className="mb-2 flex items-center justify-between">
+              <h2 className="text-[0.78rem] font-semibold uppercase tracking-[0.14em] text-[#55635a]">Session</h2>
+            </div>
             <button
               type="button"
               onClick={() => setShowSignOutDialog(true)}

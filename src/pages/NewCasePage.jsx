@@ -95,11 +95,19 @@ export default function NewCasePage() {
 
           <div className="app-panel-dark space-y-5">
             <div className="space-y-3">
-              <span className="app-kicker bg-white/10 text-white">Step 1</span>
-              <div className="space-y-2">
+              <div className="flex items-start justify-between gap-4">
                 <h1 className="max-w-[11ch] text-[2.3rem] font-semibold leading-[0.95] tracking-[-0.07em]">
                   Build a product match from one photo.
                 </h1>
+                <span
+                  className="mt-1 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/8 text-sm font-semibold text-white/90"
+                  aria-label="Informational card"
+                  title="Informational card"
+                >
+                  ?
+                </span>
+              </div>
+              <div className="space-y-2">
                 <p className="max-w-[28ch] text-sm leading-6 text-white/72">
                   Upload a close-up, describe the concern, and the pipeline will search the catalog for the best fit.
                 </p>

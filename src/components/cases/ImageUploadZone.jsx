@@ -85,8 +85,6 @@ export default function ImageUploadZone({ imagePreview, onImageSelected, error }
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
             </div>
-
-            <div className="app-chip">JPG, PNG, WebP</div>
           </div>
 
           <div className="space-y-2">
@@ -94,14 +92,11 @@ export default function ImageUploadZone({ imagePreview, onImageSelected, error }
               Tap to upload or take photo
             </p>
             <p className="max-w-[28ch] text-sm leading-6 text-[#5e6a60]">
-              Choose from your gallery, files, or take a new photo.
+              Choose from your gallery, files, or camera.
             </p>
           </div>
 
-          <div className="flex w-full items-center justify-between text-xs text-[#7f8b83]">
-            <span>Camera ready</span>
-            <span>Max 10MB</span>
-          </div>
+          <p className="text-xs text-[#7f8b83]">JPG, PNG, or WebP · Max 10MB</p>
         </button>
       )}
 
