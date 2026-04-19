@@ -1,4 +1,4 @@
-# Skincare
+# DermAI
 
 AI-assisted skincare case workflow built with React + Supabase for Origin House Hackthon.
 
