@@ -1,5 +1,6 @@
-// API calls go through Vercel server-side routes (/api/diagnose, /api/rank)
-// Keys are stored as server-only env vars in Vercel — never exposed to the browser.
+// API calls go through server-side routes — keys never exposed to the browser.
+// - diagnoseSkin → Vercel /api/diagnose
+// - rankProducts → Supabase Edge Function rank-products (150s timeout, no Vercel plan limit)
 console.log('[Featherless] Client initialised — using server-side API routes')
 
 function stripMarkdownFences(text) {
@@ -105,5 +106,27 @@ export async function diagnoseSkin({ imageBase64, mediaType = 'image/jpeg', demo
  */
 export async function rankProducts({ rawProductsAndReviews, condition }) {
   console.log('[Featherless] rankProducts called:', { condition, productCount: rawProductsAndReviews?.products?.length })
-  return callRankRoute({ rawProductsAndReviews, condition })
+
+  // Use Supabase Edge Function — 150s timeout vs Vercel Hobby's 10s
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL?.replace(/\/$/, '')
+  const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+
+  const res = await fetch(`${supabaseUrl}/functions/v1/rank-products`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${supabaseKey}`,
+    },
+    body: JSON.stringify({ rawProductsAndReviews, condition }),
+  })
+
+  if (!res.ok) {
+    const errText = await res.text().catch(() => res.statusText)
+    console.error('[Featherless] rank-products Edge Function error:', res.status, errText)
+    throw new Error(`Rank Edge Function error ${res.status}: ${errText}`)
+  }
+
+  const parsed = await res.json()
+  console.log('[Featherless] rank-products result:', parsed)
+  return parsed
 }

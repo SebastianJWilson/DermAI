@@ -63,7 +63,7 @@ serve(async (req) => {
 
     const { data: products, error } = await supabase.rpc('match_skincare_products', {
       query_embedding: queryEmbedding,
-      match_count,
+      match_count: match_count + 10, // fetch extra to allow filtering irrelevant categories
       min_rating: 3.5,
     })
 
@@ -72,11 +72,20 @@ serve(async (req) => {
       throw new Error(`Vector search failed: ${error.message}`)
     }
 
-    console.log('[search-products] Found', products?.length ?? 0, 'products')
+    // Filter out categories that are never relevant for treating skin conditions
+    const EXCLUDED_CATEGORIES = new Set([
+      'Self Tanners', 'Value & Gift Sets', 'Wellness', 'Mini Size',
+    ])
+
+    const filtered = (products ?? [])
+      .filter((p: any) => !EXCLUDED_CATEGORIES.has(p.secondary_category))
+      .slice(0, match_count)
+
+    console.log('[search-products] Found', products?.length ?? 0, 'products,', filtered.length, 'after filtering')
 
     // ── Step 3: Shape the response ───────────────────────────────────────────
     // Pick the best review snippet for the user's skin type if available
-    const shaped = (products ?? []).map((p: any, idx: number) => {
+    const shaped = (filtered ?? []).map((p: any, idx: number) => {
       const reviews: any[] = p.top_reviews ?? []
 
       // Prefer a review matching the user's skin type
